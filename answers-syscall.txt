@@ -1,0 +1,17 @@
+Q. Looking at the backtrace output, which function called syscall? 
+A. usertrap () at kernel/trap.c:67
+
+Q. What is the value of p->trapframe->a7 and what does that value represent?
+A. 0x7, which represents the system call number for `SYS_exec`.
+
+Q.  What was the previous mode that the CPU was in?
+A.  We cannot tell that from the value of `sstatus` register as it has no indicator that tells us if it were in machine-mode previously. However, since we just started the system, we have the hint that the previous mode was machine-mode.
+
+Q. Write down the assembly instruction the kernel is panicing at. Which register corresponds to the variable num? 
+A. The kernel is panicking at `80001c6c:	00002683          	lw	a3,0(zero) # 0 <_entry-0x80000000>`. The register `a3` corresponds to the variable `num`.
+
+Q. Why does the kernel crash?
+A. The kernel crashes because the address `0x0` of kernel address space is not mapped to any physical address. This is confirmed by the value of `scause` register which is `0xd`  which is the exception code for `Load page fault` exception.
+
+Q. What is the name of the process that was running when the kernel paniced? What is its process id (pid)?
+A. `initcode` and its pid was `1`.
