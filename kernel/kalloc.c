@@ -21,6 +21,7 @@ struct run {
 struct {
   struct spinlock lock;
   struct run *freelist;
+  uint64 freecnt;
 } kmem;
 
 void
@@ -65,6 +66,7 @@ kfree(void *pa)
   acquire(&kmem.lock);
   r->next = kmem.freelist;
   kmem.freelist = r;
+  kmem.freecnt++;
   release(&kmem.lock);
 }
 
@@ -82,6 +84,7 @@ kalloc(void)
   r = kmem.freelist;
   if(r) {
     kmem.freelist = r->next;
+    kmem.freecnt--;
   }
   release(&kmem.lock);
 #ifndef LAB_SYSCALL
@@ -91,3 +94,8 @@ kalloc(void)
   return (void*)r;
 }
 
+uint64
+kfree_cnt(void)
+{
+  return kmem.freecnt;
+}

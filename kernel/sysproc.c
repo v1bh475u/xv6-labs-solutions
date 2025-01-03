@@ -100,3 +100,10 @@ sys_trace(void)
   myproc()->trace_mask=mask;
   return 0;
 }
+
+uint64
+sys_memfo(void)
+{
+  uint64 free_mem=kfree_cnt();
+  return free_mem;
+}
